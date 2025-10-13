@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 모드</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: black;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #000;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar h2 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .sidebar button {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .sidebar button:hover {
+            background-color: #3498db;
+            transform: scale(1.05);
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #initialScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin: 0px 400px;
+        }
+        .video-container, .controls, #backButton, #homeButton, .person-recognition-container {
+            display: none;
+        }
+        .robot-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .robot-container img {
+            max-width: 300px;
+            height: auto;
+        }
+        img {
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+        }
+        .controls button, #backButton, #homeButton {
+            padding: 12px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .controls button:hover, #backButton:hover, #homeButton:hover {
+            background-color: #3498db;
+            transform: scale(1.05);
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .person-recognition-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .person-recognition-container img {
+            width: calc(20% - 10px);
+            height: auto;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        @media screen and (max-width: 1200px) {
+            .person-recognition-container img {
+                width: calc(25% - 10px);
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .person-recognition-container img {
+                width: calc(33.33% - 10px);
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .person-recognition-container img {
+                width: calc(50% - 10px);
+            }
+        }
+
+        #surveillanceImage {
+            width: 200%;
+            height: auto;
+            max-width: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            margin-left: -50%;
+        }
+        #calendarContainer {
+            display: flex; /* 캘린더와 이미지를 가로로 배치 */
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 20px; /* 간격 추가 */
+            margin-top: 20px;
+        }
+        /* 캘린더를 수직 배치할 wrapper */
+        #calendarWrapper {
+            display: flex;
+            flex-direction: column; /* 수직으로 배치 */
+            align-items: center; /* 왼쪽 정렬 */
+        }
+
+        /* 달력 상단에 연도/월 표시 */
+        #calendar-header {
+            text-align: center;
+            margin-bottom: 10px; /* 달력 상단과 일정 간격 추가 */
+            font-size: 24px; /* 글씨 크기 */
+        }
+
+        /* 달력 배치 */
+        #calendar {
+            display: grid; /* 그리드 레이아웃 사용 */
+            grid-template-columns: repeat(7, 1fr); /* 7개의 열로 나누기 (요일) */
+            gap: 5px;
+            width: 300px; /* 원하는 너비 */
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+        }
+
+        /* 경고 체크 이미지 배치 */
+        #warningCheckSection {
+            display: flex;
+            justify-content: center; /* 경고 이미지를 가로로 중앙 배치 */
+            align-items: center;
+            width: 450px; /* 원하는 너비 */
+            height: 100%; /* 화면 전체 높이 맞추기 */
+            margin-left: 20px; /* 캘린더와 이미지 사이에 간격 추가 */
+        }
+
+        /* 경고 이미지의 스타일 */
+        #warningCheckSection img {
+            max-width: 200px; /* 경고 이미지의 최대 너비 */
+            height: auto;
+        }
+        
+        .day {
+            padding: 10px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+
+        .day:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .selected {
+            border: 2px solid red; /* 빨간색 테두리 */
+            border-radius: 50%; /* 원형 테두리 */
+            width: 15px; /* 원의 너비 (작게 설정) */
+            height: 15px; /* 원의 높이 (작게 설정) */
+            display: flex; /* flexbox 사용 */
+            justify-content: center; /* 수평 중앙 정렬 */
+            align-items: center; /* 수직 중앙 정렬 */
+            color: red; /* 텍스트 색상 빨간색 */
+            line-height: 20px; /* 텍스트 수직 중앙 정렬 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>메뉴</h2>
+        <button onclick="showVideo()">동영상 확인</button>
+        <!-- <button onclick="showPersonRecognition()">사람 인식</button> -->
+        <button onclick="showWarningCheck()">경고 체크</button>
+    </div>
+    <div class="content">
+        <div id="initialScreen">
+            <h1>관리자 모드</h1>
+            <div class="robot-container">
+                <img src="{{ url_for('static', filename='police.png') }}" alt="로봇 이미지" />
+            </div>
+        </div>
+        <div id="videoSection" class="video-container">
+            <img id="surveillanceImage" src="{{ url_for('video_feed') }}" alt="비디오 스트리밍" />
+        </div>
+        <div id="controlButtons" class="controls">
+            <button onclick="startSurveillance()">순찰 시작</button>
+            <button onclick="stopSurveillance()">순찰 중지</button>
+            <button onclick="fullscreenVideo()">전체 화면</button>
+        </div>
+        <div id="personRecognitionSection" class="person-recognition-container">
+            <!-- 서버에서 받은 이미지들이 여기에 동적으로 삽입됩니다. -->
+        </div>
+        <div id="calendarContainer" style="display: flex;">
+            <!-- 캘린더와 경고 체크 이미지를 좌우로 배치 -->
+            <div id="calendarWrapper">
+                <!-- 캘린더 헤더 + 캘린더 수직 배치 -->
+                <div id="calendar-header"></div>  <!-- 달력 상단에 연도/월 표시 -->
+                <div id="calendar"></div> <!-- 달력 -->
+            </div>
+        
+            <!-- 경고 체크 화면을 위한 div -->
+            <div id="warningCheckSection">
+                <!-- 경고 체크 이미지를 이곳에 표시합니다. -->
+            </div>
+        </div>
+        <div id="pagination" class="button-container" style="display: none;">
+            <button id="prevPage" onclick="prevPage()">이전</button>
+            <button id="nextPage" onclick="nextPage()">다음</button>
+        </div>
+        <!-- 페이지네이션 버튼을 경고 체크 전용으로 추가 -->
+        <div id="warningPagination" class="button-container" style="display: none;">
+            <button id="prevWarningPage" onclick="prevWarningPage()">이전</button>
+            <button id="nextWarningPage" onclick="nextWarningPage()">다음</button>
+        </div>
+        <div class="button-container">
+            <button id="backButton" onclick="showInitialScreen()">초기 화면으로 돌아가기</button>
+            <button id="homeButton" onclick="goBack()">홈페이지로 돌아가기</button>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        let images = []; // 서버에서 받아온 이미지 목록
+        let currentPage = 0;
+        const imagesPerPage = 10; // 한 페이지에 표시할 이미지 수
+        let imageDates = {}; // 날짜별로 이미지를 분류한 객체
+
+        let warningImages = []; // 경고 체크 이미지 목록
+        let currentWarningPage = 0; // 현재 페이지
+        const imagesPerWarningPage = 4; // 한 페이지에 표시할 이미지 수 (5장씩)
+
+        function showInitialScreen() {
+            hideAllScreens();
+            document.getElementById('initialScreen').style.display = 'flex';
+            document.getElementById('backButton').style.display = 'none';
+        }
+
+        function showVideo() {
+            hideAllScreens();
+            document.getElementById('videoSection').style.display = 'block';
+            document.getElementById('controlButtons').style.display = 'flex';
+            refreshVideo();
+            document.getElementById('backButton').style.display = 'block';
+            document.getElementById('homeButton').style.display = 'block';
+        }
+
+        function showPersonRecognition() {
+            hideAllScreens();
+            document.getElementById('personRecognitionSection').style.display = 'flex';
+            document.getElementById('backButton').style.display = 'block';
+            document.getElementById('homeButton').style.display = 'block';
+
+            // AJAX 요청 보내기
+            fetch('/admin/person_recognition')
+                .then(response => response.json())
+                .then(data => {
+                    images = data.image_paths;
+                    displayImages(currentPage);
+                    document.getElementById('pagination').style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching person recognition data:', error));
+        }
+
+        function displayImages(page) {
+            const imageSection = document.getElementById('personRecognitionSection');
+            imageSection.innerHTML = ''; // 기존 이미지들 제거
+
+            // 표시할 이미지들
+            const startIdx = page * imagesPerPage;
+            const endIdx = Math.min(startIdx + imagesPerPage, images.length);
+
+            if (startIdx >= images.length) {
+                return;
+            }
+
+            for (let i = startIdx; i < endIdx; i++) {
+                const imgElement = document.createElement('img');
+                imgElement.src = `${images[i]}`;
+                imgElement.alt = '사람 인식 이미지';
+                // 추가: 이미지의 스타일을 자동 조정
+                imgElement.style.flexGrow = 1; // 남은 공간을 고르게 분배하도록 설정
+                imageSection.appendChild(imgElement);
+            }
+
+            updatePaginationButtons();
+        }
+
+        // 주기적으로 새로운 이미지가 있는지 확인 (예: 5초마다)
+        //setInterval(function() {
+        //    showPersonRecognition();
+        //}, 5000);
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                displayImages(currentPage);
+            }
+        }
+
+        function nextPage() {
+            if ((currentPage + 1) * imagesPerPage < images.length) {
+                currentPage++;
+                displayImages(currentPage);
+            }
+        }
+
+        function updatePaginationButtons() {
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+
+            prevButton.disabled = currentPage === 0;
+            nextButton.disabled = (currentPage + 1) * imagesPerPage >= images.length;
+        }
+
+        function showWarningCheck() {
+            hideAllScreens();
+            document.getElementById('backButton').style.display = 'block';
+            document.getElementById('homeButton').style.display = 'block';
+            document.getElementById('warningCheckSection').style.display = 'block';
+            document.getElementById('warningPagination').style.display = 'block'; // 경고 체크 페이지네이션 숨기기
+            
+            // 달력 표시
+            showCalendar();
+        }
+
+        function showCalendar() {
+            document.getElementById('calendarContainer').style.display = 'flex';
+
+            // 날짜별 이미지 데이터 요청
+            fetch('/admin/get_image_dates') // 서버에서 날짜별 이미지 데이터 요청
+                .then(response => response.json())
+                .then(data => {
+                    imageDates = data; // 이미지 날짜 데이터
+                    console.log(imageDates);
+                    renderCalendar();
+                });
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            const date = new Date();
+            const month = date.getMonth(); // 현재 월
+            const year = date.getFullYear(); // 현재 연도
+        
+            const firstDay = new Date(year, month, 1).getDay(); // 해당 월 첫째 날
+            const lastDate = new Date(year, month + 1, 0).getDate(); // 해당 월 마지막 날짜
+        
+            const calendarHeader = document.getElementById('calendar-header');
+            calendarHeader.innerHTML = `${year}년 ${month + 1}월`;  // 월은 0부터 시작하므로 1을 더해줍니다.
+
+            let calendarHtml = '';
+        
+            // 빈 칸 추가 (첫 번째 날짜까지)
+            for (let i = 0; i < firstDay; i++) {
+                calendarHtml += '<div class="day"></div>';
+            }
+        
+            // 날짜 표시
+            for (let i = 1; i <= lastDate; i++) {
+                const dateString = `${year}${(month + 1).toString().padStart(2, '0')}${i.toString().padStart(2, '0')}`;
+
+                // 'image_dates'에서 해당 날짜에 대한 이미지가 있는지 확인
+                const isSelected = Object.keys(imageDates.image_dates).some(key => {
+                    const fileDate = key.substring(0, 8); // 파일명에서 날짜 추출 (YYYYMMDD)
+                    return fileDate === dateString; // 날짜 비교
+                });
+
+                console.log(`isSelected for ${dateString}: ${isSelected}`);
+
+                // 'selected' 클래스를 추가하여 해당 날짜에 스타일을 적용
+                calendarHtml += `<div class="day ${isSelected ? 'selected' : ''}" onclick="loadImagesForDate('${dateString}')">${i}</div>`;
+            }
+            console.log(imageDates);
+            calendar.innerHTML = calendarHtml;
+        }
+        
+        function loadImagesForDate(dateString) {
+            const imagesForDate = [];
+        
+            // imageDates 객체에서 "image_dates" 키를 찾고, 그 안에 있는 파일명들을 확인합니다.
+            const images = imageDates["image_dates"]; // image_dates 안의 이미지 목록
+        
+            // 날짜 비교: dateString과 imageDates의 키에서 날짜 부분만 추출하여 비교
+            Object.keys(images).forEach(key => {
+                // key에서 날짜 부분 (YYYYMMDD)을 추출
+                const fileDate = key.substring(0, 8);  // 20241120
+        
+                // console.log(`Comparing dateString: ${dateString} with fileDate: ${fileDate}`); // 디버깅용 로그
+        
+                if (fileDate === dateString) {
+                    // 해당 날짜에 해당하는 이미지를 imagesForDate 배열에 추가
+                    imagesForDate.push(...images[key]);
+                }
+            });
+        
+            // 경고 체크 화면 표시할 div (warningCheckSection) 찾기
+            const imageSection = document.getElementById('warningCheckSection');
+            imageSection.innerHTML = ''; // 기존 이미지들 제거
+        
+            if (imagesForDate.length === 0) {
+                imageSection.innerHTML = '<p>이 날짜에 해당하는 이미지가 없습니다.</p>';
+                imageSection.style.display = 'flex'; // flexbox를 사용하여 자식 요소 중앙 정렬
+                imageSection.style.flexDirection = 'column'; // 텍스트를 세로로 정렬
+                imageSection.style.justifyContent = 'center'; // 수직 중앙 정렬
+                imageSection.style.alignItems = 'center'; // 수평 중앙 정렬
+                imageSection.style.height = '100%'; // 높이를 100%로 설정하여 화면 크기에 맞게 중앙 정렬
+            } else {
+                // 경고 체크 이미지들을 배열에 저장
+                warningImages = imagesForDate;
+                currentWarningPage = 0; // 페이지를 처음으로 설정
+                displayWarningImages(currentWarningPage); // 첫 번째 페이지 이미지 표시
+            }
+        }
+
+        function displayWarningImages(page) {
+            const imageSection = document.getElementById('warningCheckSection');
+            imageSection.innerHTML = ''; // 기존 이미지들 제거
+        
+            // 표시할 이미지들
+            const startIdx = page * imagesPerWarningPage;
+            const endIdx = Math.min(startIdx + imagesPerWarningPage, warningImages.length);
+        
+            if (startIdx >= warningImages.length) {
+                return;
+            }
+        
+            // 이미지들을 2행 2열로 나열하기 위해 rowDiv를 사용
+            let rowDiv; // 각 행을 담을 div
+        
+            for (let i = startIdx; i < endIdx; i++) {
+                if (i % 2 === 0) {
+                    // 2개의 이미지를 하나의 행에 넣을 때마다 새로운 행을 시작
+                    rowDiv = document.createElement('div');
+                    rowDiv.style.display = 'flex'; // 수평으로 배치
+                    rowDiv.style.marginBottom = '10px'; // 행 간격 추가
+                }
+        
+                const imgElement = document.createElement('img');
+                imgElement.src = `${warningImages[i]}`; // 이미지 경로
+                imgElement.alt = '경고 체크 이미지';
+                imgElement.style.width = 'calc(50% - 20px)'; // 2개의 이미지를 수평으로 배치 (50%씩)
+                imgElement.style.marginRight = '10px'; // 오른쪽 간격 추가
+                imgElement.style.marginBottom = '10px'; // 아래쪽 간격 추가
+                imgElement.style.flexGrow = 1; // 남은 공간을 고르게 분배하도록 설정
+                rowDiv.appendChild(imgElement);
+        
+                // 2개의 이미지가 하나의 행에 들어갔으면 해당 행을 섹션에 추가
+                if ((i % 2 === 1) || (i === endIdx - 1)) {
+                    imageSection.appendChild(rowDiv);
+                }
+            }
+        
+            updateWarningPaginationButtons(); // 페이지 버튼 업데이트
+        }
+        
+    
+        function prevWarningPage() {
+            if (currentWarningPage > 0) {
+                currentWarningPage--;
+                displayWarningImages(currentWarningPage);
+            }
+        }
+    
+        function nextWarningPage() {
+            if ((currentWarningPage + 1) * imagesPerWarningPage < warningImages.length) {
+                currentWarningPage++;
+                displayWarningImages(currentWarningPage);
+            }
+        }
+    
+        function updateWarningPaginationButtons() {
+            const prevButton = document.getElementById('prevWarningPage');
+            const nextButton = document.getElementById('nextWarningPage');
+    
+            prevButton.disabled = currentWarningPage === 0;
+            nextButton.disabled = (currentWarningPage + 1) * imagesPerWarningPage >= warningImages.length;
+        }
+
+        function hideAllScreens() {
+            document.getElementById('initialScreen').style.display = 'none';
+            document.getElementById('videoSection').style.display = 'none';
+            document.getElementById('controlButtons').style.display = 'none';
+            document.getElementById('personRecognitionSection').style.display = 'none';
+            document.getElementById('pagination').style.display = 'none';
+            document.getElementById('calendarContainer').style.display = 'none';
+            document.getElementById('warningCheckSection').style.display = 'none';
+            document.getElementById('warningPagination').style.display = 'none'; // 경고 체크 페이지네이션 숨기기
+        }
+
+        function refreshVideo() {
+            const img = document.getElementById('surveillanceImage');
+            videoInterval = setInterval(function() {
+                img.src = "{{ url_for('video_feed') }}?" + new Date().getTime(); // 타임스탬프 추가하여 새 이미지로 갱신
+            }, 50); // 100ms마다 이미지 갱신
+        }
+
+        function sendMessageToESP32(message) {
+            const esp32Ip = "http://172.30.1.31:80"; // ESP32의 IP 주소
+        
+            // POST 요청으로 메시지 전송
+            fetch(`${esp32Ip}/send_message?plain=${encodeURIComponent(message)}`, { method: 'POST'})
+            .then(response => response.text()) // 응답을 텍스트로 받기``
+            .then(data => {
+                console.log("Response from ESP32: " + data);
+                // alert("ESP32로부터 응답: " + data); // 응답 표시
+            })
+            .catch(error => {
+                console.error("Error communicating with ESP32:", error);
+                // alert("ESP32와 통신 중 오류가 발생했습니다: " + error); // 오류 메시지 표시
+            });
+        }
+
+        function startSurveillance() {
+            message = "Patrol Start";
+            console.log(message);
+            sendMessageToESP32(message);
+        }
+
+        function stopSurveillance() {
+            message = "Patrol Stop";
+            console.log(message);
+            sendMessageToESP32(message);
+        }
+
+        function fullscreenVideo() {
+            const img = document.getElementById('surveillanceImage');
+            if (img.requestFullscreen) {
+                img.requestFullscreen();
+            } else if (img.mozRequestFullScreen) { // Firefox
+                img.mozRequestFullScreen();
+            } else if (img.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                img.webkitRequestFullscreen();
+            } else if (img.msRequestFullscreen) { // IE/Edge
+                img.msRequestFullscreen();
+            }
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+
+        // 초기 화면 표시
+        showInitialScreen();
+    </script>
+</body>
+</html>

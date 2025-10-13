@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Map with Sidebar</title>
+  <style>
+    /* 전체 화면 크기에 맞게 레이아웃 설정 */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      font-family: Arial, sans-serif;
+    }
+    /* 맵 제목 스타일 */
+    .map-title {
+        position: absolute; /* 부모 요소 기준으로 위치 */
+        top: 10%; /* 맵 상단에 위치하도록 설정 */
+        left: 37%; /* 수평 중앙 정렬 */
+        transform: translateX(-50%); /* 수평 중앙 정렬을 위한 변환 */
+        font-size: 6vw; /* 화면 크기에 비례한 글자 크기 */
+        font-weight: bold;
+        color: #3b1520; /* 글자 색상 */
+        z-index: 10; /* SVG 위에 표시되도록 */
+    }
+    .map-container {
+        width: 70vw; /* 화면 너비의 70% */
+        height: 100vh; /* 화면 높이의 100% */
+        background-color: #fdefd5;
+        display: flex; /* 중앙 정렬을 위해 Flexbox 사용 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        box-sizing: border-box;
+        border: 0.5vw solid #f5ab6c;
+    }
+    .rectangle {
+        position: absolute; /* 맵 내에서 자유롭게 배치 가능 */
+        top: 32%; /* 맵 중앙에 위치하도록 설정 */
+        left: 3%; /* 맵 중앙에 위치하도록 설정 */
+        
+        width: 63.9vw; /* 네모의 너비 */
+        height: 26.2vw; /* 네모의 높이 */
+        background-color: transparent; /* 테두리만 보이도록 배경 투명 */
+        border: 0.2vw solid #3b1520; /* 네모 테두리 색상과 두께 */
+        z-index: 1; /* 맵 제목 아래에 위치 */
+        pointer-events: none; /* 클릭 이벤트를 차단 */
+    }
+
+    /* 사이드바 영역 (오른쪽 30%) */
+    .sidebar {
+      width: 30vw; /* 화면 너비의 30% */
+      height: 100vh; /* 화면 높이의 100% */
+      background-color: #fdefd5;
+      padding: 2vw; /* 사이드바 여백을 화면 크기에 비례하게 설정 */
+      box-sizing: border-box;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border: 0.5vw solid #f5ab6c;
+    }
+    /* SVG 맵 크기 조정 */
+    .svg {
+        width: 100%; /* 컨테이너의 너비에 맞춤 */
+        height: 100%; /* 컨테이너의 높이에 맞춤 */
+        max-width: 100%; /* 화면 크기에 따라 크기 조정 */
+        max-height: 100%; /* 화면 크기에 따라 크기 조정 */
+        display: block; /* 불필요한 여백 제거 */
+        
+    }
+    h3,p {
+      font-size: 4vw; /* 제목 글자 크기 화면 비례 */
+      margin-bottom: 2vw; /* 아래쪽 여백 동일 적용 */
+      margin-top: 2vw; /* 위쪽 여백 제거 */
+      color: #3b1520;
+    }
+    
+    /* 입력 필드 스타일 */
+    input[type="text"] {
+    width: 80%; /* 필드 너비를 부모 요소의 80% */
+    padding: 1.5vh 1.5vw; /* 패딩을 화면 비례 */
+    font-size: 1.5vw; /* 글자 크기 화면 비례 */
+    border: 0.3vw solid #f5ab6c; /* 테두리 두께 화면 비례 */
+    border-radius: 0.5vw; /* 둥근 모서리 화면 비례 */
+    box-sizing: border-box;
+    margin-bottom: 2vw; /* 아래쪽 여백 동일 적용 */
+    margin-top: 2vw; /* 위쪽 여백 제거 */
+    }
+
+    /* 버튼 스타일 */
+    button {
+    padding: 1.5vh 2vw; /* 버튼 패딩 화면 비례 */
+    font-size: 2vw; /* 글자 크기 화면 비례 */
+    border: 0.3vw solid #f5ab6c; /* 테두리 두께 화면 비례 */
+    border-radius: 0.5vw; /* 둥근 모서리 */
+    background-color: #f5ab6c;
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 2vw; /* 아래쪽 여백 동일 적용 */
+    margin-top: 2vw; /* 위쪽 여백 제거 */
+    }
+
+    /* 라벨 스타일 */
+    label {
+    font-size: 2vw; /* 라벨 글자 크기 화면 비례 */
+    display: block; /* 라벨을 블록 요소로 */
+    margin-bottom: 1vh; /* 필드와의 간격 */
+    margin-bottom: 2vw; /* 아래쪽 여백 동일 적용 */
+    margin-top: 2vw; /* 위쪽 여백 제거 */
+    color: #3b1520;
+    }
+
+    /* 팝업 스타일 */
+    #popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    #popup-content {
+        background: #ffffff;
+        padding: 3vw; /* 상대 단위로 변경 */
+        border-radius: 1.5vw; /* 반응형 모서리 */
+        text-align: center;
+        border: 0.3vw solid #f5ab6c;
+        box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1); /* 반응형 그림자 */
+        width: 40vw; /* 최대 너비 제한 */
+    }
+    #popup-content p {
+        font-size: 1.5vw; /* 글자 크기 (vw 사용) */
+        font-family: 'Apple SD Gothic Neo', sans-serif;
+        color: #3b1520;
+        line-height: 3vw; /* 줄 간격 */
+        margin: 1vw 0; /* 문단 간격 */
+        font-weight: 540; /* 굵게 설정 */
+    }
+    #close-popup, #generatePasswordButton,#check-password, #cancel {
+        margin-top: 2vw;
+        padding: 0.5vw 1vw; /* 버튼 크기 조정 */
+        background: #f5ab6c;
+        color: white;
+        border: none;
+        border-radius: 1vw;
+        cursor: pointer;
+        font-size: 1.2vw; /* 버튼 텍스트 크기 */
+    }
+    #close-popup:hover {
+        background: #d88c4c; /* 호버 시 색상 */
+    }
+
+    
+  </style>
+</head>
+
+<body>
+<div class="map-container">
+    <div class="map-title">Map</div>
+    
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+        <rect
+        style="display:inline;fill:#fdefd5;fill-opacity:1;stroke:#3b1520;stroke-width:1"
+        width="279.5"
+        height="115.7"
+        x="10.25"
+        y="58.95"
+        />
+
+        <g id="bookstore_group" inkscape:label="bookstore">
+            <path
+                id="bookstore_path"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.346803"
+                d="M 189.17157,59.603269 228.6818,91.4082 h 60.55172 V 59.603269 Z"
+            />
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="252.73248"
+                y="77.569412"
+            >
+                <tspan
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="252.73248"
+                    y="77.569412">서점
+                </tspan>
+            </text>
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                x="235.15654"
+                y="78.611107"
+            >
+                <tspan
+                style="stroke-width:0.264583"
+                x="235.15654"
+                y="78.611107">📚
+                </tspan>
+            </text>
+        </g>
+        
+        <g id="foodcourt_group" inkscape:label="foodcourt">
+            <path
+                id="foodcourt_path"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.310848"
+                d="m 251.5411,116.60437 -9.80856,9.48227 v 47.93164 h 47.50098 v -57.41391 z"
+            />
+            <text
+            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+            x="256.36157"
+            y="157.12558"
+            >
+                <tspan
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="256.36157"
+                y="157.12558">푸드코트
+                </tspan>
+            </text>
+                
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                x="259.08548"
+                y="146.18373"
+            >
+                <tspan
+                style="stroke-width:0.264583"
+                x="259.08548"
+                y="146.18373">🍜
+                </tspan>
+            </text>
+        </g>
+    
+        <g id="cinema_group" inkscape:label="cinema">
+            <path
+                id="cinema_path"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.32783"
+                d="m 59.370233,59.603269 v 36.760882 h 72.716237 l 7.20923,-7.922082 v -28.8388 z"
+            />
+            
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="90.574997"
+                y="86.363655"
+            >
+                <tspan
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="90.574997"
+                    y="86.363655">영화관
+                </tspan>
+            </text>
+            
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                x="90.318848"
+                y="76.260033"
+            >
+                <tspan
+                    style="stroke-width:0.264583"
+                    x="90.318848"
+                    y="76.260033">🎥
+                </tspan>
+            </text>
+        </g>
+        
+    
+        <g id="restroom_group" inkscape:label="restroom">
+            <path
+                id="restroom_path"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.289622"
+                d="m 117.78023,146.65398 -5.2295,3.94971 v 23.41459 h 42.64713 v -23.52932 l -5.49043,-3.83498 z"
+            />
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="125.31876"
+                y="170.83263"
+            >
+                <tspan
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="125.31876"
+                y="170.83263">화장실
+                </tspan>
+            </text>
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                x="125.08523"
+                y="161.53838"
+            >
+                <tspan
+                style="stroke-width:0.264583"
+                x="125.08523"
+                y="161.53838">🚻
+                </tspan>
+            </text>
+        </g>
+        
+        <g id="convenience_group" inkscape:label="convenience">
+            <rect
+                id="convenience_path"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.279863"
+                width="62.179001"
+                height="35.109276"
+                x="10.836945"
+                y="138.90901"
+            />
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="32.34037"
+                y="165.59154"
+            >
+                <tspan
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="32.34037"
+                y="165.59154">편의점
+                </tspan>
+            </text>
+            <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                x="32.059776"
+                y="155.92024"
+            >
+                <tspan
+                style="stroke-width:0.264583"
+                x="32.059776"
+                y="155.92024">🛒
+                </tspan>
+            </text>
+        </g> 
+        
+    </svg>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h3>물품 보관</h3>
+        <label for="start-location">호출 위치:</label>
+        <input type="text" id="start-location" placeholder="호출 위치를 선택하세요" readonly>
+
+        <button id="show-route">물품 보관</button>
+        <button id="item-retrieve">물품 찾기</button>
+    </div>
+</div>
+
+<div id="popup" style="display: none;">
+    <div id="popup-content">
+        <p id="popup-text"></p>
+        <button id="cancel" onclick="cancelAction()">호출 취소</button>
+    </div>
+</div>
+
+<script>
+    let selectedBox = null; // 현재 선택된 입력 박스
+    let startLocation = null;
+    let endLocation = null;
+    
+     //esp32 랑 통신
+     function sendLocationToESP32(area) 
+     {
+         const esp32Ip = "http://172.30.1.31:80"; // ESP32의 IP 주소
+         fetch(`${esp32Ip}/location?area=${encodeURIComponent(area)}`, { method: 'GET' })
+             .then(response => response.text())
+             .then
+                 (data => 
+                     {
+                         console.log("Response from ESP32: " + data);
+                         // alert("ESP32로부터 응답: " + data);
+                     }
+                 )
+             .catch
+                 (error => 
+                     {
+                         console.error("Error communicating with ESP32:", error);
+                         // alert("ESP32와 통신 중 오류가 발생했습니다."+ error);
+                     }
+                 );
+    }
+
+    function sendMessageToESP32(message) {
+        const esp32Ip = "http://172.30.1.31:80"; // ESP32의 IP 주소
+    
+        // POST 요청으로 메시지 전송
+        fetch(`${esp32Ip}/send_message?plain=${encodeURIComponent(message)}`, { method: 'POST'})
+        .then(response => response.text()) // 응답을 텍스트로 받기``
+        .then(data => {
+            console.log("Response from ESP32: " + data);
+            // alert("ESP32로부터 응답: " + data); // 응답 표시
+        })
+        .catch(error => {
+            console.error("Error communicating with ESP32:", error);
+            // alert("ESP32와 통신 중 오류가 발생했습니다: " + error); // 오류 메시지 표시
+        });
+    }
+
+    window.onload = function() {
+        sendLocationToESP32("Item_Storage");
+        let generatedPassword = localStorage.getItem('generatedPassword') || ''; // 비밀번호가 없으면 빈 문자열
+    }
+    // 각 장소의 좌표 및 이름 정의
+    const locations = {
+        bookstore_group: { name: '서점', en_name: 'Bookstore' },
+        foodcourt_group: { name: '푸드코트', en_name: 'Foodcourt' },
+        cinema_group: { name: '영화관', en_name: 'Cinema' },
+        restroom_group: { name: '화장실', en_name: 'Restroom' },
+        convenience_group: { name: '편의점', en_name: 'Convenience Store' },
+    };
+
+    // 호출 위치 입력 박스 클릭 이벤트
+    document.getElementById('start-location').addEventListener('click', function() {
+        selectedBox = 'start-location';
+    });
+
+    // 각 장소 Path, Rect 및 Group에 클릭 이벤트 추가
+    document.querySelectorAll('path, rect, g').forEach(element => {
+        element.addEventListener('click', function() {
+            const locationId = this.id; // 클릭한 요소의 ID 가져오기
+            setLocation(locationId);
+        });
+    });
+
+    // 클릭된 장소를 선택된 입력 박스에 설정
+    function setLocation(locationId) {
+        if (!locations[locationId]) return;
+
+        if (selectedBox === 'start-location') {
+            startLocation = locations[locationId];
+            document.getElementById('start-location').value = startLocation.name;
+        }
+    }
+
+
+
+    const popup = document.getElementById('popup');
+    const popupText = document.getElementById('popup-text');
+    const closePopup = document.getElementById('close-popup');
+
+
+
+    // 점을 추가하는 함수
+    let dotCount = 0;
+    let dotInterval;
+    function createDots() {
+        dotCount = 0; // 처음 시작할 때 점을 0으로 초기화
+
+        // 점을 추가하는 interval 설정
+        dotInterval = setInterval(() => {
+            if (dotCount < 3) {
+                dotCount++; // 점 하나씩 추가
+            } else {
+                dotCount = 1; // 점이 3개가 되면 다시 1개로
+            }
+            updatePopupText(); // 점을 업데이트
+        }, 500); // 0.5초마다 점을 갱신
+
+        return '.'.repeat(dotCount); // 현재 점의 갯수에 맞는 점을 반환
+    }
+
+    // 팝업 텍스트 업데이트 함수
+    function updatePopupText() {
+        popupText.innerHTML = `
+            호출 위치: ${startLocation.name}<br><br>
+            agv가 오고 있습니다${'.'.repeat(dotCount)}<br>
+            잠시만 기다려주세요!
+        `;
+    }
+    // 팝업을 띄우고 3초 후에 메인 페이지로 리다이렉트하는 함수
+    function showPopupAndRedirect() {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'flex';  // 팝업 보이기 (flex로 수정하여 중앙 정렬 유지)
+
+        // 3초 후에 팝업을 숨기고 메인 페이지로 리다이렉트
+        setTimeout(function() {
+            popup.style.display = 'none';  // 팝업 숨기기
+            window.location.href = '/';  // 메인 페이지로 리다이렉트
+        }, 3000); // 3초 후
+    }
+
+</script>
+
+<script>
+const ws = new WebSocket("ws://172.30.1.31:83"); // ESP32의 IP 주소
+
+ws.onopen = () => {
+    console.log('WebSocket 연결 성공');
+};
+
+ws.onmessage = (event) => {
+    if (event.data === "store") {
+        clearInterval(dotInterval); // 점 애니메이션 중지
+        popupText.innerHTML = `
+            AGV가 도착했습니다.<br>
+            버튼을 누르고 짐을 넣어주세요.<br><br>
+            <button id="generatePasswordButton">비밀번호 생성</button>
+            <div id="passwordDisplay" style="margin-top: 10px; font-weight: bold;"></div>
+        `;
+        document.getElementById('cancel').style.display = 'none';  // 호출 취소 버튼 숨기기
+        
+
+        const generatePasswordButton = document.getElementById("generatePasswordButton");
+        const passwordDisplay = document.getElementById("passwordDisplay");
+
+       
+        generatePasswordButton.addEventListener("click", () => {
+            // 랜덤 4자리 비밀번호 생성
+            generatedPassword = Math.floor(1000 + Math.random() * 9000).toString();
+            passwordDisplay.innerText = `비밀번호: ${generatedPassword}`;
+
+            // 비밀번호 생성 버튼 숨기기
+            generatePasswordButton.style.display = "none";
+
+            // DB에 비밀번호 저장 요청
+            
+            fetch('/page_item_storage/save_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: generatedPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // alert(data.message);
+                // localStorage에 비밀번호 저장
+                localStorage.setItem('generatedPassword', generatedPassword);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            if(generatedPassword != null){
+                // 짐 보관 상태로 변경
+                luggage_status = true;
+                localStorage.setItem('luggage_status', luggage_status); // 상태를 localStorage에 저장
+            }
+            // 비밀번호 생성 후 "닫기" 버튼 만들기
+            const closeButton = document.createElement('button');
+            closeButton.innerText = "닫기";
+            closeButton.id = "close-popup";
+            popupText.appendChild(closeButton);
+            
+
+            // "닫기" 버튼 클릭 시 팝업 닫기
+            closeButton.addEventListener('click', () => {
+                document.getElementById("popup").style.display = "none"; // 팝업 닫기
+            });
+        });
+    }
+    else if(event.data === "retrieve") {
+        clearInterval(dotInterval);  // 점 애니메이션 중지
+        popupText.innerHTML = `
+            agv가 도착했습니다.<br><br>
+            물품을 가져가세요!
+        `;
+        document.getElementById('cancel').style.display = 'none';  // 호출 취소 버튼 숨기기
+        showPopupAndRedirect();  // 팝업을 띄우고 3초 후에 메인 페이지로 리다이렉트
+    }
+    else if(event.data.startsWith("S")) {  // S1~S6 형태의 데이터 처리
+        const storageNumber = event.data.substring(1);  // "S"를 제거하고 숫자 부분만 추출
+        fetch('/page_item_storage/save_storage_location', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                storage_location: storageNumber,
+                customer_password: generatedPassword  // 비밀번호와 함께 저장 위치를 보냄
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 성공적으로 저장된 경우 처리
+            console.log('물품 보관 위치가 저장되었습니다:', data);
+        })
+        .catch((error) => {
+            console.error('물품 보관 위치 저장 오류:', error);
+        });
+    }
+
+};
+
+
+
+ws.onerror = (error) => {
+    console.error("WebSocket 에러:", error);
+};
+
+function cancelAction() {
+    // 팝업을 닫기
+    var popup = document.getElementById('popup');
+    popup.style.display = 'none';
+
+    // WebSocket으로 'cancel' 메시지 전송
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send("cancel"); // WebSocket으로 'cancel' 메시지 전송
+        console.log("WebSocket으로 cancel 메시지 전송!");
+    } else {
+        console.log("WebSocket 연결이 닫혀 있습니다.");
+    }
+    // 일정 시간 후에 페이지를 리다이렉트
+    setTimeout(function() {
+        window.location.href = '/';  // 호출 취소 후 페이지 리다이렉트
+    }, 500); // 500ms (0.5초) 기다린 후 페이지 리다이렉트
+}
+
+
+//---------------------------------------------------------------------------------------------//
+
+let generatedPassword = localStorage.getItem('generatedPassword') || ''; // 비밀번호가 없으면 빈 문자열
+
+let luggage_status = (localStorage.getItem('luggage_status') === 'true'); // 'true'일 경우 true, 그렇지 않으면 false
+if (localStorage.getItem('luggage_status') === null) {
+    // 처음에 값이 없다면 false로 설정
+    luggage_status = false;
+    localStorage.setItem('luggage_status', 'false'); // 기본값으로 false를 저장
+}
+// "물품 보관" 버튼 클릭 이벤트
+document.getElementById('show-route').addEventListener('click', function () {
+    //luggage_status = localStorage.getItem('luggage_status') === 'true'; // 짐 보관 상태
+    //console.log(luggage_status);
+    //if (luggage_status) {
+    //    // 짐을 보관 중일 때 팝업 변경
+    //    popupText.innerHTML = `
+    //        짐을 보관하고 있습니다.<br>
+    //        생성된 비밀번호: ${generatedPassword}<br>
+    //        <button id="close-popup">닫기</button>
+    //    `;
+    //    popup.style.display = 'flex';
+    //    
+    //    document.getElementById('close-popup').addEventListener('click', function () {
+    //        popup.style.display = 'none'; // 팝업 닫기
+    //    });
+
+    //} else {
+        if (startLocation) {
+            // 팝업 표시
+            popupText.innerHTML = `
+                호출 위치: ${startLocation.name}<br><br>
+                AGV가 오고 있습니다${createDots()}<br>
+                잠시만 기다려주세요!
+            `;
+            
+            popup.style.display = 'flex';
+            
+
+            // 출발지와 도착지를 텍스트 형식으로 변환
+            const data = `SAVE ${startLocation.en_name}`;
+
+            sendLocationToESP32(data);
+        } else {
+            alert('호출 위치를 선택해주세요.');
+        }
+   //}
+});
+
+// "물품 찾기" 버튼 클릭 이벤트
+document.getElementById('item-retrieve').addEventListener('click', function () {
+    //luggage_status = localStorage.getItem('luggage_status') === 'true'; // 짐 보관 상태
+    //if (!luggage_status) {
+    //    // 짐을 맡기지 않은 상태
+    //    alert('물품을 맡기지 않았습니다.');
+    //    return;
+    //}
+
+    // 호출 위치를 선택하지 않은 경우
+    if (!selectedBox || selectedBox !== 'start-location' || !startLocation) {
+        alert('호출 위치를 선택하세요.');
+        return;
+    }
+
+    // 비밀번호 입력 팝업 표시
+    popupText.innerHTML = `
+        비밀번호를 입력하세요:<br>
+        <input type="text" id="password-input" placeholder="비밀번호 입력"><br>
+        <button id="check-password">확인</button><br>
+        <button id="close-popup">닫기</button>
+    `;
+    popup.style.display = 'flex';
+
+    // "확인" 버튼 클릭 이벤트 추가
+    document.getElementById('check-password').addEventListener('click', function () {
+        const enteredPassword = document.getElementById('password-input').value;
+
+        if (enteredPassword) {
+            // 서버에 입력한 비밀번호를 확인 요청
+            fetch('/page_item_storage/verify_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: enteredPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.valid) {
+                    // 비밀번호가 맞을 때, DB에서 물품 보관 위치를 가져오는 요청
+                    return fetch('/page_item_storage/get_storage_location', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ password: enteredPassword })
+                    });
+                } else {
+                    // 비밀번호가 틀린 경우
+                    popupText.innerHTML = `
+                        비밀번호가 틀렸습니다.<br>
+                        다시 시도하세요.<br>
+                        <button id="close-popup">닫기</button>
+                    `;
+
+                    // "닫기" 버튼 클릭 이벤트 다시 추가
+                    document.getElementById('close-popup').addEventListener('click', function () {
+                        popup.style.display = 'none'; // 팝업 닫기
+                    });
+
+                    // 비밀번호가 틀린 경우 로그로 처리
+                    console.error('Invalid password');  // 오류 메시지를 콘솔에 로그로 출력
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.storage_location) {
+                    // 물품 보관 위치를 불러옴
+                    const storageLocation = data.storage_location;
+                    const formattedStorageLocation = 'R' + storageLocation;
+                    sendMessageToESP32(formattedStorageLocation)
+                    // 비밀번호 삭제 요청
+                    return fetch('/page_item_storage/delete_password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ password: enteredPassword })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 비밀번호 삭제 후 상태 초기화
+                        luggage_status = false; // 상태 초기화
+                        localStorage.setItem('luggage_status', luggage_status); // 상태를 localStorage에 저장
+
+                        // 출발지와 도착지를 텍스트 형식으로 변환
+                        const data1 = `RETURN ${startLocation.en_name}`;
+
+                        sendLocationToESP32(data1);
+
+                        // 비밀번호가 맞는 경우
+                        popupText.innerHTML = `
+                            비밀번호가 맞습니다.<br>
+                            물품 보관 위치: ${storageLocation}<br>
+                            AGV가 오고 있습니다.
+                        `;
+
+                        // 물품 보관 위치 처리 후, 출발지에 대한 요청
+                        // 예: 저장된 위치 정보를 기반으로 추가 작업을 할 수 있습니다.
+                        console.log('물품 보관 위치:', storageLocation);
+
+                        // localStorage에서 비밀번호 삭제
+                        localStorage.removeItem('generatedPassword');
+                    })
+                    .catch((error) => {
+                        console.error('Error during password deletion:', error);
+                    });
+                } else {
+                    // 물품 보관 위치가 없다면
+                    popupText.innerHTML = `
+                        물품 보관 위치를 찾을 수 없습니다.<br>
+                        다시 시도하세요.<br>
+                        <button id="close-popup">닫기</button>
+                    `;
+                    document.getElementById('close-popup').addEventListener('click', function () {
+                        popup.style.display = 'none'; // 팝업 닫기
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        } else {
+            // 입력 없을 때
+            popupText.innerHTML = `
+                비밀번호 입력<br>
+                <button id="close-popup">닫기</button>
+            `;
+            // "닫기" 버튼 클릭 이벤트 다시 추가
+            document.getElementById('close-popup').addEventListener('click', function () {
+                popup.style.display = 'none'; // 팝업 닫기
+            });
+        }
+    });
+
+    // "닫기" 버튼 클릭 시 팝업 닫기
+    document.getElementById('close-popup').addEventListener('click', function () {
+        popup.style.display = 'none'; // 팝업 닫기
+    });
+});
+
+
+
+// 호출 위치 입력 박스 클릭 이벤트
+document.getElementById('start-location').addEventListener('click', function () {
+    // 호출 위치가 선택되었을 때 startLocation 설정
+    selectedBox = 'start-location';
+    startLocation = true;  // 호출 위치 선택됨을 표시
+});
+
+</script>
+</body>
+</html>

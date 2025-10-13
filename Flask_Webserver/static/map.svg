@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="map.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.104894"
+     inkscape:cx="553.89927"
+     inkscape:cy="440.31372"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+    <defs id="defs1">
+        <inkscape:path-effect
+          effect="powerclip"
+          message=""
+          id="path-effect20"
+          is_visible="true"
+          lpeversion="1"
+          inverse="true"
+          flatten="false"
+          hide_clip="false" />
+        
+        <inkscape:path-effect
+          effect="powerclip"
+          message=""
+          id="path-effect19"
+          is_visible="true"
+          lpeversion="1"
+          inverse="true"
+          flatten="false"
+          hide_clip="false" />
+        
+        <inkscape:path-effect
+          effect="powerclip"
+          message=""
+          id="path-effect14"
+          is_visible="true"
+          lpeversion="1"
+          inverse="true"
+          flatten="false"
+          hide_clip="false" />
+
+        <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1">
+          <rect
+            style="fill:#f7b882;stroke-width:0.264583"
+            id="rect2"
+            width="185.58299"
+            height="91.436714"
+            x="28.108324"
+            y="34.204105"
+            transform="rotate(90.351189)" 
+          />
+        </clipPath>
+        
+        <clipPath clipPathUnits="userSpaceOnUse" id="clipPath13">
+            <path
+              sodipodi:type="star"
+              style="display:block;fill:#ff0000;fill-opacity:1;stroke-width:0.264583"
+              id="path14"
+              inkscape:flatsided="true"
+              sodipodi:sides="3"
+              sodipodi:cx="161.87685"
+              sodipodi:cy="82.631699"
+              sodipodi:r1="12.895579"
+              sodipodi:r2="6.4477897"
+              sodipodi:arg1="0.52240343"
+              sodipodi:arg2="1.569601"
+              inkscape:rounded="0"
+              inkscape:randomized="0"
+              inkscape:transform-center-x="-0.0077073241"
+              inkscape:transform-center-y="-3.2172178" 
+            />
+        </clipPath>
+          
+        <clipPath clipPathUnits="userSpaceOnUse" id="clipPath18">
+          <path
+            sodipodi:type="star"
+            style="display:none;fill:#ff0000;fill-opacity:1;stroke-width:0.264583"
+            id="path19"
+            inkscape:flatsided="true"
+            sodipodi:sides="3"
+            sodipodi:cx="171.57658"
+            sodipodi:cy="125.41974"
+            sodipodi:r1="6.9157796"
+            sodipodi:r2="3.4578898"
+            sodipodi:arg1="1.207973"
+            sodipodi:arg2="2.2551705"
+            inkscape:rounded="0"
+            inkscape:randomized="0"
+            d="m 174.0311,131.88529 -9.28111,-7.57265 11.19867,-4.25135 z"
+            inkscape:transform-center-x="1.2272576"
+            inkscape:transform-center-y="0.5535518" 
+            />
+        </clipPath>
+          </defs>
+            <g inkscape:label="map" inkscape:groupmode="layer" id="layer1">
+              <rect
+                style="display:inline;fill:#fdefd5;fill-opacity:1;stroke-width:0.299398"
+                id="map"
+                width="278.38101"
+                height="114.40152"
+                x="10.852055"
+                y="59.603268"
+                inkscape:label="map" />   
+              <g id="g27" inkscape:label="Book_Store">
+                <path
+                  id="Book_Store"
+                  style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.346803"
+                  inkscape:highlight-color="#b1b5ad"
+                  d="M 189.17157,59.603269 228.6818,91.4082 h 60.55172 V 59.603269 Z"
+                  inkscape:label="Book_Store" />
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                  x="252.73248"
+                  y="77.569412"
+                  id="text26"
+                  inkscape:label="Book_Store">
+                  <tspan
+                      sodipodi:role="line"
+                      id="tspan26"
+                      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                      x="252.73248"
+                      y="77.569412">서점
+                  </tspan>
+                </text>
+
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                  x="235.15654"
+                  y="78.611107"
+                  id="text34"
+                  inkscape:label="Book_Store_icon">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan34"
+                    style="stroke-width:0.264583"
+                    x="235.15654"
+                    y="78.611107">📚
+                  </tspan>
+                </text>
+              </g>
+              
+              
+              <g id="g28" inkscape:label="Food_Court">
+                <path
+                  id="rect23"
+                  style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.310848"
+                  d="m 251.5411,116.60437 -9.80856,9.48227 v 47.93164 h 47.50098 v -57.41391 z"
+                  inkscape:label="Food_Court" 
+                />
+                <text
+                xml:space="preserve"
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="256.36157"
+                y="157.12558"
+                id="text26-3"
+                inkscape:label="Food_Court">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan26-3"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="256.36157"
+                    y="157.12558">푸드코트
+                  </tspan>
+                </text>
+                  
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                  x="259.08548"
+                  y="146.18373"
+                  id="text33"
+                  inkscape:label="Food_Court_icon">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan33"
+                    style="stroke-width:0.264583"
+                    x="259.08548"
+                    y="146.18373">🍜
+                  </tspan>
+                </text>
+              </g>
+            
+              <g id="g26" inkscape:label="Cinema">
+                <path
+                id="rect21"
+                style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.32783"
+                d="m 59.370233,59.603269 v 36.760882 h 72.716237 l 7.20923,-7.922082 v -28.8388 z"
+                inkscape:label="Cinema" />
+                <text
+                xml:space="preserve"
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                x="90.574997"
+                y="86.363655"
+                id="text26-8"
+                inkscape:label="Cinema">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan26-1"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="90.574997"
+                    y="86.363655">영화관
+                  </tspan>
+                </text>
+                
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                  x="90.318848"
+                  y="76.260033"
+                  id="text30"
+                  inkscape:label="Cinema_icon">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan30"
+                    style="stroke-width:0.264583"
+                    x="90.318848"
+                    y="76.260033">🎥
+                  </tspan>
+                </text>
+              </g>
+          
+              <g id="g29" inkscape:label="Restroom">
+                <path
+                  id="rect22"
+                  style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.289622"
+                  d="m 117.78023,146.65398 -5.2295,3.94971 v 23.41459 h 42.64713 v -23.52932 l -5.49043,-3.83498 z"
+                  inkscape:label="Restroom" />
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                  x="125.31876"
+                  y="170.83263"
+                  id="text26-6"
+                  inkscape:label="Restroom">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan26-0"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="125.31876"
+                    y="170.83263">화장실
+                  </tspan>
+                </text>
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                  x="125.08523"
+                  y="161.53838"
+                  id="text31"
+                  inkscape:label="Restroom_icon">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan31"
+                    style="stroke-width:0.264583"
+                    x="125.08523"
+                    y="161.53838">🚻
+                  </tspan>
+                </text>
+              </g>
+              
+              <g id="g30" inkscape:label="Convenience_Store">
+                <rect
+                  style="fill:#f5ab6c;fill-opacity:1;stroke-width:0.279863"
+                  id="rect24"
+                  width="62.179001"
+                  height="35.109276"
+                  x="10.836945"
+                  y="138.90901"
+                  inkscape:label="Convenience_Store" />
+                <text
+                    xml:space="preserve"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="32.34037"
+                    y="165.59154"
+                    id="text26-1"
+                    inkscape:label="Convenience_Store">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan26-2"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.75805px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#3d1422;fill-opacity:1;stroke-width:0.0340049"
+                    x="32.34037"
+                    y="165.59154">편의점
+                  </tspan>
+                </text>
+                <text
+                  xml:space="preserve"
+                  style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8023px;font-family:HYGothic-Extra;-inkscape-font-specification:'HYGothic-Extra, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#3d1422;fill-opacity:1;stroke-width:0.264583"
+                  x="32.059776"
+                  y="155.92024"
+                  id="text32"
+                  inkscape:label="Convenience_Store_icon">
+                  <tspan
+                    sodipodi:role="line"
+                    id="tspan32"
+                    style="stroke-width:0.264583"
+                    x="32.059776"
+                    y="155.92024">🛒
+                  </tspan>
+                </text>
+              </g> 
+            </g>
+</svg>

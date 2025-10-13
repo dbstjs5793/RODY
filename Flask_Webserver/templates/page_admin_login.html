@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 페이지</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white; /* 배경 흰색 */
+            color: black;
+            display: flex;
+            height: 100vh;
+            justify-content: center; /* 중앙 정렬 */
+            align-items: center; /* 중앙 정렬 */
+        }
+        .login-container {
+            width: 350px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background-color: #f9f9f9; /* 밝은 배경 */
+            display: flex;
+            flex-direction: column; /* 세로 방향으로 정렬 */
+            align-items: center; /* 중앙 정렬 */
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 90%; /* 너비를 줄여서 흰색 박스보다 작게 */
+            padding: 10px; 
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+        button {
+            width: 90%; /* 너비를 입력 박스와 동일하게 */
+            padding: 12px;
+            margin-top: 10px; /* 버튼과 입력 박스 간의 간격 */
+            border: none;
+            border-radius: 5px;
+            background-color: #333; /* 버튼 검정색 */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background-color: #3498db; /* 파란색 */
+            transform: scale(1.05);
+        }
+        #error-message {
+            color: red; 
+            text-align: center; 
+            display: none; 
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>로그인</h2>
+        <input type="text" id="admin_id" placeholder="사용자 ID" required>
+        <input type="password" id="admin_password" placeholder="비밀번호" required>
+        <button onclick="verifyAdmin()">관리자 로그인</button>
+        <div id="error-message"></div>
+    </div>
+
+    <script>
+        function verifyAdmin() {
+            const adminId = document.getElementById('admin_id').value;
+            const adminPassword = document.getElementById('admin_password').value;
+        
+            fetch('/admin_login/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ admin_id: adminId, admin_password: adminPassword }) // 수정된 부분
+            })
+            .then(response => response.json())
+            .then(data => {
+                const errorMessage = document.getElementById('error-message');
+                if (data.valid) {
+                    window.location.href = '/admin'; // 관리자 대시보드로 이동
+                } else {
+                    errorMessage.innerText = "관리자 ID 또는 비밀번호가 틀립니다.";
+                    errorMessage.style.display = 'block'; // 에러 메시지 표시
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("로그인 중 오류가 발생했습니다.");
+            });
+        }
+    </script>
+</body>
+</html>
