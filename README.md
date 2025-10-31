@@ -91,17 +91,6 @@ AGV(자율주행차), 로봇암, PLC, Flask Web Server를 통합하여
 
 ## 🎥 Demonstration
 
-| 기능 | 영상 | 비고 |
-|------|------|------|
-| 길안내 (SLAM 주행) | [YouTube Link](https://www.youtube.com/...) | 쇼핑몰 구간 |
-| 물품보관 (라인트레이싱+로봇암 제어) | [YouTube Link](https://www.youtube.com/...) | PLC 제어 포함 |
-| 순찰 (침입자 감지) | [YouTube Link](https://www.youtube.com/...) | YOLOv8 실시간 감지 |
+https://youtu.be/P34krm5tWJw
 
----
-
-## 🔗 Repository
-
-📁 **GitHub:** [https://github.com/dbstjs5793/RODY](https://github.com/dbstjs5793/RODY)
-
----
 
