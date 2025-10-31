@@ -2,7 +2,6 @@
 
 > **SLAM + Line Tracing 기반 AGV와 PLC 제어 로봇암을 연동한 스마트 안내·물품보관 로봇 시스템**
 
-![rody](https://github.com/dbstjs5793/RODY/assets/README_MAIN_IMAGE.png)
 
 ---
 
