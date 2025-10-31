@@ -1,0 +1,8 @@
+prefix=/home/er/myagv_ros/devel
+
+Name: assistant
+Description: Description of assistant
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

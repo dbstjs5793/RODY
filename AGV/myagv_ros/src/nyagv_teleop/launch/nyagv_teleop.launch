@@ -1,0 +1,4 @@
+<launch>
+  <node name="nyagv_teleop" pkg="nyagv_teleop" type="nyagv_teleop.py" output="screen">
+  </node>
+</launch>
